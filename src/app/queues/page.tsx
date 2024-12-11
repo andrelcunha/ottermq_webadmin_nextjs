@@ -1,4 +1,4 @@
-// import axios from 'axios';
+// src/app/queues/page.tsx
 
 interface QueueResponse {
     queues: string[];
