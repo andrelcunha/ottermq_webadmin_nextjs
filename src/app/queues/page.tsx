@@ -1,9 +1,11 @@
 // src/app/queues/page.tsx
+"use client"
+import { useState, useEffect } from 'react';
+import GetMessage from "@/components/GetMessage";
 
 interface QueueResponse {
     queues: string[];
 }
-
 
 export async function getQueues(): Promise<string[]> {
     let response = await fetch('http://localhost:8081/queues');
@@ -11,9 +13,13 @@ export async function getQueues(): Promise<string[]> {
     return data.queues;
 }
 
-export default async function Page() {
-    let queues = await getQueues();
+const Page = () => {
+    const [queues, setQueues] = useState<string[]>([]);
+    const [selectedQueue, setSelectedQueue] = useState<string | null>(null);
 
+    useEffect(() => {
+        getQueues().then(setQueues);
+    }, []);
 
     return (
         <div>
@@ -34,7 +40,12 @@ export default async function Page() {
                 </thead>
                 <tbody>
                     {queues.map((queue, index) => (
-                        <tr key={index} className={`border border-gray-900 ${index % 2 === 0 ? 'bg-gray-900' : ''}`}>
+                        <tr 
+                            key={index}
+                            className={`border border-gray-900 ${index % 2 === 0 ? 'bg-gray-900' : ''}`}
+                            onClick={() => setSelectedQueue(queue)}
+                            style={{ cursor: 'pointer' }}
+                        >
                             <td className="py-2 px-4 border border-gray-900">localhost</td>
                             <td className="py-2 px-4 border border-gray-900">{queue}</td>
                             <td className="py-2 px-4 border border-gray-900">running</td>
@@ -46,6 +57,9 @@ export default async function Page() {
                     ))}
                 </tbody>
             </table>
+            {selectedQueue && <GetMessage selectedQueue={selectedQueue} />}
         </div>
     );
 };
+
+export default Page;

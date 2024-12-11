@@ -17,7 +17,10 @@ const PublishMessage: FC<PublishMessageProps> = ({ selectedExchange }) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ exchange_name: exchange, routing_key: msgRoutingKey, payload: payload }),
+            body: JSON.stringify({ 
+                exchange_name: exchange, 
+                routing_key: msgRoutingKey, 
+                message: payload }),
         });
 
         if (response.ok) {
